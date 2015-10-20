@@ -1,0 +1,48 @@
+#!/bin/env python
+import click
+
+import premo
+
+
+@click.group()
+def main():
+    pass
+
+
+@main.group()
+def db():
+    pass
+
+
+@db.command()
+def create():
+    premo.db.create(premo.settings)
+
+
+@db.command()
+def drop():
+    premo.db.drop(premo.settings)
+
+
+@main.group()
+def mq():
+    pass
+
+
+@mq.command()
+def create():
+    premo.msg.brokers.rabbitmq.Engine.create_exchanges()
+    for qargs in premo.settings.AMQP['QUEUES']:
+        queue = premo.msg.brokers.rabbitmq.Engine.Queue(*qargs)
+        premo.msg.brokers.rabbitmq.Engine.create_queue(queue)
+
+
+@mq.command()
+def drop():
+    for qargs in premo.settings.AMQP['QUEUES']:
+        queue = premo.msg.brokers.rabbitmq.Engine.Queue(*qargs)
+        premo.msg.brokers.rabbitmq.Engine.delete_queue(queue)
+
+
+if __name__ == '__main__':
+    main()

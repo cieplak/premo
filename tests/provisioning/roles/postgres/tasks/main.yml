@@ -1,0 +1,13 @@
+---
+
+- name: Install base packages
+  shell: apt-get install -y postgresql
+
+- name: Ensure postgres is running
+  service: name=postgresql state=started
+
+- name: Turn off postgres authentication
+  copy:
+    src=pg_hba.conf
+    dest=/etc/postgresql/9.3/main/pg_hba.conf
+  notify: restart postgres

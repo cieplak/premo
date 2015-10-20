@@ -1,0 +1,23 @@
+---
+
+- name: add rabbitmq repo key
+  apt_key: url=https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+
+- name: add repo
+  copy:
+    src=../files/rabbitmq.list
+    dest=/etc/apt/sources.list.d/
+    backup=yes
+  register: aptrepo
+
+- name: install server
+  apt: name=rabbitmq-server update_cache=yes
+
+- name: persist state across restarts
+  service: name=rabbitmq-server enabled=yes
+
+- name: enable management plugin
+  rabbitmq_plugin:
+    names=rabbitmq_management
+    new_only=no
+  notify: restart rabbitmq-server

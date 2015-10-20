@@ -1,0 +1,19 @@
+---
+
+- name: Update Apt
+  shell: apt-get update
+
+- name: Install base packages
+  shell: apt-get install -y git htop ncdu nethogs python python-dev python-pip tmux tree vim libpq-dev
+
+- pip: name=virtualenv
+
+- shell: VENV=/home/vagrant/venv && mkdir $VENV && virtualenv $VENV
+  args:
+    creates: /home/vagrant/venv
+
+- name: Setup python project
+  shell: /home/vagrant/venv/bin/python setup.py develop
+  args:
+    chdir: /home/vagrant/premo
+    user: vagrant
