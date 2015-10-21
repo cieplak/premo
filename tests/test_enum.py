@@ -4,7 +4,7 @@ from . import TestCase
 
 class TestEnum(TestCase):
 
-    def test_init(self):
+    def test_enum(self):
         directions = premo.Enum(
             'EAST',
             'WEST',
